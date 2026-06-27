@@ -3,6 +3,7 @@ from .base_config import BaseConfig
 from .statemachine import SimpleStateMachine
 from .camera_spline_interpolation import interpolate_camera_poses
 from .download_from_huggingface import download_from_huggingface, check_hf_login_or_exit
+from .robot_movement_controller import RobotMovementController
 
 import os
 import sys
@@ -129,6 +130,7 @@ __all__ = [
     "PIDarray",
     "BaseConfig",
     "SimpleStateMachine",
+    "RobotMovementController",
     "interpolate_camera_poses",
     "get_mocap_tmat",
     "get_site_tmat",

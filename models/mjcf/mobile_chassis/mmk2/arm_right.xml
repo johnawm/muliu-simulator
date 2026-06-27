@@ -31,9 +31,9 @@
             <body name="rgt_arm_link6" pos="0 0.23645 0" quat="0.499998 -0.5 0.5 0.500002">
               <inertial pos="0.020482 2.5483e-05 -0.079685" mass="0.40081" diaginertia="0.00109963 0.00109963 0.00109963"/>
               <joint name="rgt_arm_joint6" class='joint6'/>
-              <geom type="cylinder" pos="0 0 -0.11" size="0.03 0.03" euler="0 0 0" rgba="1 0 0 1" group="4"/>
-              <geom type="box" pos="0 0 -0.07" size="0.025 0.08 0.015" rgba="1 0 0 1" group="4"/>
-              <geom rgba="0.1 0.1 0.1 1" mesh="link6" class="visual"/>
+              <!-- <geom type="cylinder" pos="0 0 -0.11" size="0.03 0.03" euler="0 0 0" rgba="1 0 0 1" group="4"/>
+              <geom type="box" pos="0 0 -0.07" size="0.025 0.08 0.015" rgba="1 0 0 1" group="4"/> -->
+              <!-- <geom rgba="0.1 0.1 0.1 1" mesh="link6" class="visual"/> -->
               <geom rgba="0.1 0.1 0.1 1" mesh="camera_stand" class="visual"/>
               <body pos="-0.105 0 -0.12" euler="3.1416 0 1.5708">
                 <site name="right_cam" euler="3.1416 0 0" size='0.001' type='sphere'/>

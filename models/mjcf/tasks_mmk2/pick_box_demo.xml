@@ -1,0 +1,164 @@
+<mujoco model="pick_jujube_mmk2">
+
+  <include file="../scene.xml"/>
+  <include file="../mobile_chassis/mmk2/mmk2_options.xml"/>
+  <include file="../mobile_chassis/mmk2/mmk2_dependencies.xml"/>
+
+  <compiler angle="radian" meshdir="../../meshes/" texturedir="../../meshes/"/>
+
+  <asset>
+    <mesh name="my_box_mesh" file="eurobox_15.stl" scale="0.007 0.007 0.01"/>
+  </asset>
+
+  <worldbody>
+    <body name='mmk2' pos="0 0 0" euler="0 0 0">
+      <joint type="free" frictionloss="0.0001" />
+      <include file="../mobile_chassis/mmk2/mmk2.xml"/>
+    </body>
+
+    <!-- ======= 3层线棒车（货架）左侧 ======= -->
+    <!-- 线棒车：宽度500mm，长度2270mm，高度降低到机器人最大高度1.22m范围内 -->
+    <body name="shelf_frame" pos="-1.5 0 0">
+      <!-- 4根立柱 (高度1.1m) -->
+      <geom size="0.025 0.025 0.55" pos="-0.25  1.085 0.55" type="box" rgba="0.6 0.6 0.6 1"/>
+      <geom size="0.025 0.025 0.55" pos="-0.25 -1.085 0.55" type="box" rgba="0.6 0.6 0.6 1"/>
+      <geom size="0.025 0.025 0.55" pos=" 0.25  1.085 0.55" type="box" rgba="0.6 0.6 0.6 1"/>
+      <geom size="0.025 0.025 0.55" pos=" 0.25 -1.085 0.55" type="box" rgba="0.6 0.6 0.6 1"/>
+      <!-- 3层托盘，高度调整为0.30m, 0.65m, 1.00m -->
+      <!-- 第一层: 300mm -->
+      <geom size="0.25 1.135 0.02" pos="0 0 0.30" type="box" rgba="0.8 0.8 0.8 1"/>
+      <!-- 第二层: 300+350=650mm -->
+      <geom size="0.25 1.135 0.02" pos="0 0 0.65" type="box" rgba="0.8 0.8 0.8 1"/>
+      <!-- 第三层: 650+350=1000mm -->
+      <geom size="0.25 1.135 0.02" pos="0 0 1.00" type="box" rgba="0.8 0.8 0.8 1"/>
+    </body>
+
+    <!-- ======= 2个栈板（右侧）每个栈板2×3排列6个料箱 ======= -->
+    <!-- 栈板：宽度1000mm，长度1200mm，高度741mm -->
+    <!-- 线棒车右边缘(x=0.25)到栈板左边缘距离2200mm，栈板左边缘x=0.25+2.2=2.45m -->
+    <!-- 料箱尺寸: 400×300×230mm -->
+    <!-- 栈板左边缘x=2.45m，栈板宽度1200mm，中心x=2.45+0.6=3.05m -->
+    <!-- 料箱并排2列，左列中心x=3.05-0.15=1，右列中心x=3.05+0.15=3.2 -->
+
+    <!-- 栈板1底座 (实心) -->
+    <body name="pallet_1" pos="1.5 0.6 0">
+      <!-- 实心栈板：高度0.3m，顶部表面在z=0.3m -->
+      <geom size="0.6 0.5 0.3" pos="0 0 0.3" type="box" rgba="0.65 0.5 0.3 1" friction="1 0.005 0.005"/>
+    </body>
+
+    <!-- 栈板2底座 (实心) -->
+    <body name="pallet_2" pos="1.5 -0.6 0">
+      <!-- 实心栈板：高度0.3m，顶部表面在z=0.3m -->
+      <geom size="0.6 0.5 0.3" pos="0 0 0.3" type="box" rgba="0.65 0.5 0.3 1" friction="1 0.005 0.005"/>
+    </body>
+
+    <!-- ======= 栈板上的料箱 (作为顶层free joint物体) ======= -->
+    <!-- 料箱横着放：长400mm在y方向，宽300mm在x方向，高230mm在z方向 -->
+    <!-- 两堆箱子各与栈板边缘对齐，中间留缝隙 -->
+    <!-- 编号顺序：从上到下（先搬顶层，再搬中层，最后底层） -->
+    <!-- pallet_2: y=-0.6区域，左堆y=-0.9，右堆y=-0.3 -->
+    <!-- pallet_1: y=0.6区域，左堆y=0.3，右堆y=0.9 -->
+
+    <!-- pallet_1左堆 (0.3) - 从上往下搬：顶层box_1, 中层box_2, 底层box_3 -->
+    <!-- 栈板表面z=0.3，箱子高约0.23m -->
+    <body name="pallet_1_box_1" pos="1.2 0.3 1">
+      <inertial pos="0 0 0" mass="5" diaginertia="0.05 0.05 0.05"/>
+      <joint type="free" frictionloss="1" />
+      <geom type="mesh" mesh="my_box_mesh" rgba="0.5 0.5 0.5 1" euler="0 0 1.5708" friction="1 0.005 0.005"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 -0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+    </body>
+    <body name="pallet_1_box_2" pos="1.2 0.3 1">
+      <inertial pos="0 0 0" mass="5" diaginertia="0.05 0.05 0.05"/>
+      <joint type="free" frictionloss="1" />
+      <geom type="mesh" mesh="my_box_mesh" rgba="0.5 0.5 0.5 1" euler="0 0 1.5708" friction="1 0.005 0.005"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 -0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+    </body>
+    <body name="pallet_1_box_3" pos="1.2 0.3 1">
+      <inertial pos="0 0 0" mass="5" diaginertia="0.05 0.05 0.05"/>
+      <joint type="free" frictionloss="1" />
+      <geom type="mesh" mesh="my_box_mesh" rgba="0.5 0.5 0.5 1" euler="0 0 1.5708" friction="1 0.005 0.005"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 -0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+    </body>
+
+    <!-- pallet_1右堆 (0.9) - 从上往下搬：顶层box_4, 中层box_5, 底层box_6 -->
+    <body name="pallet_1_box_4" pos="1.2 0.9 1">
+      <inertial pos="0 0 0" mass="5" diaginertia="0.05 0.05 0.05"/>
+      <joint type="free" frictionloss="1" />
+      <geom type="mesh" mesh="my_box_mesh" rgba="0.5 0.5 0.5 1" euler="0 0 1.5708" friction="1 0.005 0.005"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 -0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+    </body>
+    <body name="pallet_1_box_5" pos="1.2 0.9 1">
+      <inertial pos="0 0 0" mass="5" diaginertia="0.05 0.05 0.05"/>
+      <joint type="free" frictionloss="1" />
+      <geom type="mesh" mesh="my_box_mesh" rgba="0.5 0.5 0.5 1" euler="0 0 1.5708" friction="1 0.005 0.005"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 -0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+    </body>
+    <body name="pallet_1_box_6" pos="1.2 0.9 1">
+      <inertial pos="0 0 0" mass="5" diaginertia="0.05 0.05 0.05"/>
+      <joint type="free" frictionloss="1" />
+      <geom type="mesh" mesh="my_box_mesh" rgba="0.5 0.5 0.5 1" euler="0 0 1.5708" friction="1 0.005 0.005"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 -0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+    </body>
+
+    <!-- pallet_2左堆 (-0.9) - 从上往下搬：顶层box_1, 中层box_2, 底层box_3 -->
+    <body name="pallet_2_box_1" pos="1.2 -0.9 1">
+      <inertial pos="0 0 0" mass="5" diaginertia="0.05 0.05 0.05"/>
+      <joint type="free" frictionloss="1" />
+      <geom type="mesh" mesh="my_box_mesh" rgba="0.5 0.5 0.5 1" euler="0 0 1.5708" friction="1 0.005 0.005"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 -0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+    </body>
+    <body name="pallet_2_box_2" pos="1.2 -0.9 1">
+      <inertial pos="0 0 0" mass="5" diaginertia="0.05 0.05 0.05"/>
+      <joint type="free" frictionloss="1" />
+      <geom type="mesh" mesh="my_box_mesh" rgba="0.5 0.5 0.5 1" euler="0 0 1.5708" friction="1 0.005 0.005"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 -0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+    </body>
+    <body name="pallet_2_box_3" pos="1.2 -0.9 1">
+      <inertial pos="0 0 0" mass="5" diaginertia="0.05 0.05 0.05"/>
+      <joint type="free" frictionloss="1" />
+      <geom type="mesh" mesh="my_box_mesh" rgba="0.5 0.5 0.5 1" euler="0 0 1.5708" friction="1 0.005 0.005"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 -0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+    </body>
+
+    <!-- pallet_2右堆 (-0.3) - 从上往下搬：顶层box_4, 中层box_5, 底层box_6 -->
+    <body name="pallet_2_box_4" pos="1.2 -0.3 1">
+      <inertial pos="0 0 0" mass="5" diaginertia="0.05 0.05 0.05"/>
+      <joint type="free" frictionloss="1" />
+      <geom type="mesh" mesh="my_box_mesh" rgba="0.5 0.5 0.5 1" euler="0 0 1.5708" friction="1 0.005 0.005"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 -0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+    </body>
+    <body name="pallet_2_box_5" pos="1.2 -0.3 1">
+      <inertial pos="0 0 0" mass="5" diaginertia="0.05 0.05 0.05"/>
+      <joint type="free" frictionloss="1" />
+      <geom type="mesh" mesh="my_box_mesh" rgba="0.5 0.5 0.5 1" euler="0 0 1.5708" friction="1 0.005 0.005"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 -0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+    </body>
+    <body name="pallet_2_box_6" pos="1.2 -0.3 1">
+      <inertial pos="0 0 0" mass="5" diaginertia="0.05 0.05 0.05"/>
+      <joint type="free" frictionloss="1" />
+      <geom type="mesh" mesh="my_box_mesh" rgba="0.5 0.5 0.5 1" euler="0 0 1.5708" friction="1 0.005 0.005"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+      <geom type="box" size="0.1 0.02 0.005" pos="0 -0.22 0.145" rgba="0.5 0.5 0.5 1"/>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <include file="../mobile_chassis/mmk2/mmk2_control.xml"/>
+  </actuator>
+
+  <sensor>
+    <include file="../mobile_chassis/mmk2/mmk2_sensor.xml"/>
+  </sensor>
+
+</mujoco>
